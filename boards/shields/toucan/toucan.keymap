@@ -125,9 +125,9 @@
         fn {
             display-name = "FN";
             bindings = <
-                &bt BT_CLR  &studio_unlock &kp F9 &kp F10 &kp F11 &kp F12   &bt BT_SEL 0     &bt BT_SEL 1 &kp C_VOL_UP &kp F15 &bt BT_SEL 2 &bt BT_SEL 3
-                &kp CAPS    &out OUT_TOG   &kp F5 &kp F6  &kp F7  &kp F8    &kp LC(LA(LEFT)) &kp C_RW     &kp C_PP     &kp C_FF &bt BT_SEL 4 &none
-                &bootloader &sys_reset     &kp F1 &kp F2  &kp F3  &kp F4    &kp LC(LA(RIGHT)) &kp C_MUTE  &kp C_VOL_DN &kp F14 &none        &none
+                &bt BT_SEL 0 &bt BT_SEL 1 &kp F9 &kp F10 &kp F11 &kp F12   &bt BT_CLR        &out OUT_TOG &kp C_VOL_UP &kp F15 &none          &none
+                &kp CAPS     &bt BT_SEL 2 &kp F5 &kp F6  &kp F7  &kp F8    &kp LC(LA(LEFT))  &kp C_RW     &kp C_PP     &kp C_FF &studio_unlock &none
+                &bt BT_SEL 3 &bt BT_SEL 4 &kp F1 &kp F2  &kp F3  &kp F4    &kp LC(LA(RIGHT)) &kp C_MUTE   &kp C_VOL_DN &kp F14 &bootloader    &sys_reset
                                    &kp LGUI &trans &kp SPACE   &kp RET &trans &kp LSHFT
             >;
         };
