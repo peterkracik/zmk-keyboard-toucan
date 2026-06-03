@@ -4,16 +4,88 @@
 #include <dt-bindings/zmk/outputs.h>
 
 #define BASE 0
-#define NAV  1
-#define SYM  2
-#define ADJ  3
+#define SYM  1
+#define NAV  2
+#define FN   3
+
+// Hyper = Ctrl + Shift + Gui + Alt
+#define HYPER LS(LC(LG(LALT)))
 
 / {
     conditional_layers {
         compatible = "zmk,conditional-layers";
         tri_layer {
-            if-layers = <1 2>;
-            then-layer = <3>;
+            if-layers = <SYM NAV>;
+            then-layer = <FN>;
+        };
+    };
+
+    behaviors {
+        // TD(6): tap = Gui+Space, hold = one-shot Hyper (OSM), double-tap = Shift+Gui+Space
+        hyper_gspc: hyper_gui_space {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <150>;
+            bindings = <&sk>, <&kp>;
+        };
+        td6: tap_dance_6 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <150>;
+            bindings = <&hyper_gspc HYPER LG(SPACE)>, <&kp LS(LG(SPACE))>;
+        };
+
+        // TD(7): tap/hold = Ctrl, double-tap = Ctrl+L
+        td7: tap_dance_7 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp LCTRL>, <&kp LC(L)>;
+        };
+    };
+
+    macros {
+        // M2: Gui+Shift+Alt+V
+        m2: macro_2 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <0>;
+            tap-ms = <5>;
+            bindings = <&macro_press &kp LGUI &kp LSHFT>,
+                       <&macro_wait_time 50>,
+                       <&macro_press &kp LALT>,
+                       <&macro_tap &kp V>,
+                       <&macro_wait_time 50>,
+                       <&macro_release &kp LALT &kp LSHFT &kp LGUI>;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+        // TAB + A -> Left Shift
+        combo_lshift {
+            timeout-ms = <50>;
+            key-positions = <12 13>;
+            bindings = <&kp LSHFT>;
+        };
+        // P + BSPC -> Delete
+        combo_del {
+            timeout-ms = <50>;
+            key-positions = <10 11>;
+            bindings = <&kp DEL>;
+        };
+        // I + O -> one-shot Ctrl+Shift+Gui
+        combo_osm {
+            timeout-ms = <50>;
+            key-positions = <8 9>;
+            bindings = <&sk LC(LS(LGUI))>;
+        };
+        // R + T -> Backspace
+        combo_bspc {
+            timeout-ms = <50>;
+            key-positions = <4 5>;
+            bindings = <&kp BSPC>;
         };
     };
 
@@ -23,42 +95,43 @@
         base {
             display-name = "BASE";
             bindings = <
-                &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-                &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-                &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                                &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
-            >;
-        };
-
-        nav {
-            display-name = "NAV";
-            bindings = <
-                &kp TAB     &kp N1          &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-                &bt BT_CLR  &bt BT_SEL 0    &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-                &kp LSHFT   &studio_unlock  &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &trans
-                                                &kp LGUI     &trans       &kp SPACE      &kp RET  &trans   &kp RALT
+                &kp ESC   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
+                &kp TAB   &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
+                &td7      &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &td6
+                              &kp LGUI &mo SYM &kp SPACE   &kp RET &mo NAV &kp LSHFT
             >;
         };
 
         sym {
             display-name = "SYM";
             bindings = <
-                &kp TAB   &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp BSPC
-                &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
-                &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
-                                          &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
+                &kp GRAVE &kp EXCL &kp AT       &kp HASH &kp DLLR &kp PRCNT   &kp CARET    &kp AMPS &kp ASTRK &kp UNDER &kp PLUS  &kp DEL
+                &none     &none    &kp LS(LA(N2)) &kp LBRC &kp RBRC &kp BSLH    &kp KP_EQUAL &kp LPAR &kp RPAR  &kp MINUS &kp EQUAL &kp BSLH
+                &kp LCTRL &kp LALT &kp DEL      &kp LT   &kp GT   &kp PIPE    &kp KP_PLUS  &kp LBKT &kp RBKT  &kp PIPE  &kp RALT  &kp LS(LG(SPACE))
+                                   &kp LGUI &trans &kp SPACE   &kp RET &mo FN &kp LSHFT
             >;
         };
 
-        adj {
-            display-name = "ADJ";
+        nav {
+            display-name = "NAV";
             bindings = <
-                &mo TAB   &trans &kp F7 &kp F8 &kp F9 &kp F12   &kp C_VOL_DN &kp C_MUTE  &kp C_VOL_UP &trans &trans &kp BSPC
-                &kp LCTRL &trans &kp F4 &kp F5 &kp F6 &kp F11   &trans       &trans      &trans       &trans &trans &trans
-                &bt LSHFT &trans &kp F1 &kp F2 &kp F3 &kp F10   &trans       &trans      &trans       &trans &trans &trans
-                                   &kp LGUI &mo NAV &kp SPACE   &kp RET &mo 2 &kp RALT
+                &kp TILDE &kp N1 &kp N2 &kp N3 &kp N4 &kp N5   &kp N6   &kp N7      &kp N8      &kp N9    &kp N0   &kp BSPC
+                &kp CAPS  &none  &none  &none  &none  &kp PG_UP &kp LEFT &kp DOWN    &kp UP      &kp RIGHT &none    &kp RET
+                &kp LCTRL &kp LALT &none &none &m2   &kp PG_DN &kp HOME &kp LA(LEFT) &kp LA(RIGHT) &kp END &kp RALT &kp LC(LS(LG(LA(RET))))
+                                   &kp LGUI &mo FN &kp SPACE   &kp RET &trans &kp LSHFT
             >;
         };
+
+        fn {
+            display-name = "FN";
+            bindings = <
+                &bt BT_CLR  &studio_unlock &kp F9 &kp F10 &kp F11 &kp F12   &bt BT_SEL 0     &bt BT_SEL 1 &kp C_VOL_UP &kp F15 &bt BT_SEL 2 &bt BT_SEL 3
+                &kp CAPS    &out OUT_TOG   &kp F5 &kp F6  &kp F7  &kp F8    &kp LC(LA(LEFT)) &kp C_RW     &kp C_PP     &kp C_FF &bt BT_SEL 4 &none
+                &bootloader &sys_reset     &kp F1 &kp F2  &kp F3  &kp F4    &kp LC(LA(RIGHT)) &kp C_MUTE  &kp C_VOL_DN &kp F14 &none        &none
+                                   &kp LGUI &trans &kp SPACE   &kp RET &trans &kp LSHFT
+            >;
+        };
+
         extra_1 {
                 status = "reserved";
         };
