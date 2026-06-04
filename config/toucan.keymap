@@ -108,7 +108,7 @@
                 &kp GRAVE &kp EXCL &kp AT       &kp HASH &kp DLLR &kp PRCNT   &kp CARET    &kp AMPS &kp ASTRK &kp UNDER &kp PLUS  &kp DEL
                 &none     &none    &kp LS(LA(N2)) &kp LBRC &kp RBRC &kp BSLH    &kp KP_EQUAL &kp LPAR &kp RPAR  &kp MINUS &kp EQUAL &kp BSLH
                 &kp LCTRL &kp LALT &kp DEL      &kp LT   &kp GT   &kp PIPE    &kp KP_PLUS  &kp LBKT &kp RBKT  &kp PIPE  &kp RALT  &kp LS(LG(SPACE))
-                                   &kp LGUI &trans &kp SPACE   &kp RET &mo FN &kp LSHFT
+                                   &kp LGUI &trans &kp SPACE   &kp RET &trans &kp LSHFT
             >;
         };
 
@@ -118,7 +118,7 @@
                 &kp TILDE &kp N1 &kp N2 &kp N3 &kp N4 &kp N5   &kp N6   &kp N7      &kp N8      &kp N9    &kp N0   &kp BSPC
                 &kp CAPS  &none  &none  &none  &none  &kp PG_UP &kp LEFT &kp DOWN    &kp UP      &kp RIGHT &none    &kp RET
                 &kp LCTRL &kp LALT &none &none &m2   &kp PG_DN &kp HOME &kp LA(LEFT) &kp LA(RIGHT) &kp END &kp RALT &kp LC(LS(LG(LA(RET))))
-                                   &kp LGUI &mo FN &kp SPACE   &kp RET &trans &kp LSHFT
+                                   &kp LGUI &trans &kp SPACE   &kp RET &trans &kp LSHFT
             >;
         };
 
